@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e3a5f"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="64" height="64" rx="12" fill="url(#bg)"/>
+  <!-- Inner ellipse: green (low distortion) -->
+  <ellipse cx="32" cy="32" rx="9" ry="8" fill="none" stroke="#10b981" stroke-width="2.5" opacity="0.95" transform="rotate(-5, 32, 32)"/>
+  <!-- Middle ellipse: yellow (medium) -->
+  <ellipse cx="32" cy="32" rx="17" ry="11" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.85" transform="rotate(12, 32, 32)"/>
+  <!-- Outer ellipse: red (high distortion) -->
+  <ellipse cx="32" cy="32" rx="26" ry="13" fill="none" stroke="#ef4444" stroke-width="1.8" opacity="0.8" transform="rotate(-8, 32, 32)"/>
+  <!-- Center dot -->
+  <circle cx="32" cy="32" r="2.5" fill="white" opacity="0.9"/>
+</svg>

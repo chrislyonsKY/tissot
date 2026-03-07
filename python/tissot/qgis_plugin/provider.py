@@ -25,6 +25,8 @@ class TissotProvider(QgsProcessingProvider):
 
     def icon(self):
         icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
+        if not os.path.exists(icon_path):
+            icon_path = os.path.join(os.path.dirname(__file__), "icon-qgis.svg")
         return QIcon(icon_path)
 
     def loadAlgorithms(self):

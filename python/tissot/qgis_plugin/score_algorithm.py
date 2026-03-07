@@ -14,7 +14,7 @@ from qgis.core import (
     QgsProcessingParameterFileDestination,
 )
 
-import tissot
+from . import tissot
 
 
 class TissotScoreAlgorithm(QgsProcessingAlgorithm):

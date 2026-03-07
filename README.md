@@ -71,24 +71,36 @@ cargo install tissot
 pip install tissot
 ```
 
-## Python API
+## QGIS Plugin (Public Release)
+
+Install `tissot` into the same Python runtime used by QGIS:
+
+```bash
+"/Applications/QGIS.app/Contents/MacOS/python" -m pip install tissot
+```
+
+Then download `tissot_processing_provider-<version>.zip` from the GitHub release
+assets and install it in QGIS via:
+
+`Plugins -> Manage and Install Plugins... -> Install from ZIP`
+
+## Python Integration
+
+PyO3 bindings are in progress. Today, Python environments install the `tissot`
+CLI, which can be called from Python via `subprocess`.
 
 ```python
-import tissot
+import json
+import subprocess
 
-# X-Ray analysis
-report = tissot.xray("data.gpkg")
-print(f"Max area error: {report.area_distortion.max_pct:.1f}%")
-for rec in report.recommendations:
-    print(f"  {rec.epsg}: {rec.area_error_pct:.2f}% area error")
-
-# Data quality check
-report = tissot.check("data.gpkg")
-print(f"Score: {report.score}/100 ({report.grade})")
-
-# Diff
-report = tissot.diff("v1.gpkg", "v2.gpkg")
-print(f"Added: {report.added}, Removed: {report.removed}, Modified: {report.modified}")
+result = subprocess.run(
+  ["tissot", "check", "data.gpkg", "--json"],
+  check=True,
+  capture_output=True,
+  text=True,
+)
+report = json.loads(result.stdout)
+print(report["summary"]["total"])
 ```
 
 ## Key Principles

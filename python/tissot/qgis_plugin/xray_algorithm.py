@@ -20,7 +20,7 @@ from qgis.core import (
     QgsWkbTypes,
 )
 
-import tissot
+from . import tissot
 
 
 class TissotXrayAlgorithm(QgsProcessingAlgorithm):

@@ -16,6 +16,7 @@ mkdir -p "${STAGE_DIR}/${PACKAGE_NAME}"
 # Copy only runtime files into a single plugin folder, then zip that folder.
 cp "${SCRIPT_DIR}/__init__.py" "${STAGE_DIR}/${PACKAGE_NAME}/"
 cp "${SCRIPT_DIR}/provider.py" "${STAGE_DIR}/${PACKAGE_NAME}/"
+cp "${SCRIPT_DIR}/tissot.py" "${STAGE_DIR}/${PACKAGE_NAME}/"
 cp "${SCRIPT_DIR}/xray_algorithm.py" "${STAGE_DIR}/${PACKAGE_NAME}/"
 cp "${SCRIPT_DIR}/check_algorithm.py" "${STAGE_DIR}/${PACKAGE_NAME}/"
 cp "${SCRIPT_DIR}/score_algorithm.py" "${STAGE_DIR}/${PACKAGE_NAME}/"

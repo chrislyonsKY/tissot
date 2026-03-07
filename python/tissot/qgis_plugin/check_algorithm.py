@@ -21,7 +21,7 @@ from qgis.core import (
     QgsWkbTypes,
 )
 
-import tissot
+from . import tissot
 
 
 class TissotCheckAlgorithm(QgsProcessingAlgorithm):

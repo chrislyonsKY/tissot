@@ -11,12 +11,13 @@ QGIS Processing provider that exposes Tissot algorithms as native Processing too
 
 - QGIS 3.28+
 - Python 3.9+
-- `tissot` Python package installed in the same Python environment used by QGIS
+- `tissot` CLI available (installed from this repo via pip/maturin)
 
 ## Install dependency in QGIS Python environment
 
-The plugin is UI glue and calls the Tissot Rust core through Python bindings.
-Install `tissot` in the active QGIS Python environment before running algorithms.
+The plugin is UI glue and calls the Tissot Rust core through the local
+`tissot` CLI (`--json` mode). Install `tissot` in the active QGIS Python
+environment before running algorithms.
 
 Example (from QGIS Python console or matching shell):
 
@@ -29,6 +30,18 @@ Use that interpreter to install:
 
 ```bash
 "<path-to-qgis-python>" -m pip install tissot
+```
+
+Optional: override CLI location if needed.
+
+```bash
+export TISSOT_CLI="$HOME/.local/bin/tissot"
+```
+
+For local development from a checkout, editable installs are still valid:
+
+```bash
+"<path-to-qgis-python>" -m pip install -e /path/to/tissot
 ```
 
 ## Plugin package notes
