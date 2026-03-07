@@ -36,6 +36,11 @@ pub fn compute_score(findings: &[Finding], config: &Config) -> ScoreReport {
             config.score.accessibility_weight,
         ),
         compute_category(
+            Category::CloudReadiness,
+            findings,
+            config.score.cloud_readiness_weight,
+        ),
+        compute_category(
             Category::Classification,
             findings,
             config.score.classification_weight,

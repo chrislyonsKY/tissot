@@ -47,6 +47,8 @@ pub struct ScoreConfig {
     pub data_integrity_weight: f64,
     /// Accessibility weight.
     pub accessibility_weight: f64,
+    /// Cloud readiness weight.
+    pub cloud_readiness_weight: f64,
     /// Classification weight.
     pub classification_weight: f64,
 }
@@ -85,8 +87,9 @@ impl Default for ScoreConfig {
         Self {
             projection_weight: 0.25,
             data_integrity_weight: 0.30,
-            accessibility_weight: 0.25,
-            classification_weight: 0.20,
+            accessibility_weight: 0.20,
+            cloud_readiness_weight: 0.20,
+            classification_weight: 0.05,
         }
     }
 }

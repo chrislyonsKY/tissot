@@ -1,4 +1,6 @@
-/// Rule: Detect features with null/missing geometry.
+//! Rule: Detect features with null/missing or empty geometry.
+use geo::HasDimensions;
+
 use crate::core::rule::{CheckContext, Domain, Feature, Finding, Rule, Severity, SpatialLocation};
 
 /// Flags features that have null or missing geometry.
@@ -12,7 +14,7 @@ impl Default for NullGeometry {
 
 impl Rule for NullGeometry {
     fn id(&self) -> &str {
-        "data_quality/null-geometry"
+        "data/null-geometry"
     }
 
     fn name(&self) -> &str {
@@ -32,12 +34,16 @@ impl Rule for NullGeometry {
 
         for layer in ctx.layers {
             for (idx, feature) in layer.features.iter().enumerate() {
-                if feature.geometry.is_none() {
+                let is_null_or_empty = match &feature.geometry {
+                    None => true,
+                    Some(geom) => geom.is_empty(),
+                };
+                if is_null_or_empty {
                     findings.push(Finding {
                         rule_id: self.id().to_string(),
                         severity: self.default_severity(),
                         message: format!(
-                            "Feature {} has null geometry in layer '{}'",
+                            "Feature {} has null or empty geometry in layer '{}'",
                             feature_label(feature, idx),
                             layer.name
                         ),
@@ -112,7 +118,7 @@ mod tests {
         let findings = rule.check(&ctx);
         assert_eq!(findings.len(), 1);
         assert_eq!(findings[0].severity, Severity::Error);
-        assert!(findings[0].message.contains("null geometry"));
+        assert!(findings[0].message.contains("null or empty geometry"));
     }
 
     #[test]

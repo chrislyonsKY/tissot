@@ -11,6 +11,8 @@ pub enum Category {
     DataIntegrity,
     /// Accessibility (color contrast, symbology).
     Accessibility,
+    /// Cloud readiness (format, metadata, spatial index).
+    CloudReadiness,
     /// Classification quality.
     Classification,
 }
@@ -21,6 +23,7 @@ impl std::fmt::Display for Category {
             Category::Projection => write!(f, "Projection"),
             Category::DataIntegrity => write!(f, "Data Integrity"),
             Category::Accessibility => write!(f, "Accessibility"),
+            Category::CloudReadiness => write!(f, "Cloud Readiness"),
             Category::Classification => write!(f, "Classification"),
         }
     }
@@ -30,9 +33,10 @@ impl Category {
     /// Get the rule ID prefix that maps to this category.
     pub fn rule_prefix(&self) -> &str {
         match self {
-            Category::Projection => "projection",
-            Category::DataIntegrity => "data_quality",
+            Category::Projection => "proj",
+            Category::DataIntegrity => "data",
             Category::Accessibility => "cartography",
+            Category::CloudReadiness => "cloud",
             Category::Classification => "classification",
         }
     }
@@ -65,7 +69,7 @@ mod tests {
 
     #[test]
     fn rule_prefix_mapping() {
-        assert_eq!(Category::Projection.rule_prefix(), "projection");
-        assert_eq!(Category::DataIntegrity.rule_prefix(), "data_quality");
+        assert_eq!(Category::Projection.rule_prefix(), "proj");
+        assert_eq!(Category::DataIntegrity.rule_prefix(), "data");
     }
 }
