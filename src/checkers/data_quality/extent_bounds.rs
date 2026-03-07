@@ -2,7 +2,9 @@
 
 use geo::{BoundingRect, Coord, Rect};
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Flags features with geometry extending beyond the layer's declared extent.
 pub struct ExtentBounds;
@@ -57,10 +59,7 @@ impl Rule for ExtentBounds {
                     || feature_rect.max().x > bounds.max().x
                     || feature_rect.max().y > bounds.max().y
                 {
-                    let feature_label = feature
-                        .id
-                        .clone()
-                        .unwrap_or_else(|| format!("#{idx}"));
+                    let feature_label = feature.id.clone().unwrap_or_else(|| format!("#{idx}"));
 
                     findings.push(Finding {
                         rule_id: self.id().to_string(),
@@ -69,9 +68,7 @@ impl Rule for ExtentBounds {
                             "Feature {feature_label} in layer '{}' extends outside declared bounds",
                             layer.name
                         ),
-                        location: Some(SpatialLocation::Feature {
-                            id: feature_label,
-                        }),
+                        location: Some(SpatialLocation::Feature { id: feature_label }),
                         geometry: Some(geom.clone()),
                         metric: None,
                         suggestion: Some(

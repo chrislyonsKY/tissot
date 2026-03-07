@@ -3,7 +3,9 @@
 //! Configurable threshold via `check.max_distortion_pct` (default: 5.0%).
 //! Reports Warning above 5%, Error above 10%. Fixable via reprojection.
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Flags layers with excessive area distortion by invoking the X-Ray engine.
 ///
@@ -52,7 +54,11 @@ impl Rule for AreaDistortion {
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
         let mut findings = Vec::new();
-        let warning_threshold = ctx.config.check.max_distortion_pct.min(self.warning_threshold_pct);
+        let warning_threshold = ctx
+            .config
+            .check
+            .max_distortion_pct
+            .min(self.warning_threshold_pct);
 
         for layer in ctx.layers {
             let crs = match &layer.crs {
@@ -69,10 +75,7 @@ impl Rule for AreaDistortion {
             let report = match crate::xray::analyze(layer, ctx.config, ctx.file_path) {
                 Ok(r) => r,
                 Err(e) => {
-                    log::warn!(
-                        "X-Ray analysis failed for layer '{}': {e}",
-                        layer.name
-                    );
+                    log::warn!("X-Ray analysis failed for layer '{}': {e}", layer.name);
                     continue;
                 }
             };

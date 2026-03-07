@@ -142,11 +142,7 @@ fn classify_projection_family(epsg: u32, name: &str) -> String {
 }
 
 /// Generate a plain-English distortion description.
-fn describe_distortion(
-    name: &str,
-    family: &str,
-    entry: &crs_database::CrsEntry,
-) -> String {
+fn describe_distortion(name: &str, family: &str, entry: &crs_database::CrsEntry) -> String {
     let mut parts = Vec::new();
 
     if entry.preserves_area {
@@ -178,7 +174,10 @@ fn generate_warnings(entry: &crs_database::CrsEntry) -> Vec<String> {
     let mut warnings = Vec::new();
 
     if entry.epsg == 3857 {
-        warnings.push("Do not use for area calculations — area distortion exceeds 400% near the poles.".into());
+        warnings.push(
+            "Do not use for area calculations — area distortion exceeds 400% near the poles."
+                .into(),
+        );
         warnings.push("Coordinates are in meters but do not represent true ground distances at most latitudes.".into());
     }
 
@@ -266,7 +265,11 @@ mod tests {
     fn explain_unknown_code() {
         let expl = explain_crs("EPSG:99999").unwrap();
         assert_eq!(expl.epsg, 99999);
-        assert!(expl.warnings.iter().any(|w| w.contains("not in the curated database")));
+        assert!(
+            expl.warnings
+                .iter()
+                .any(|w| w.contains("not in the curated database"))
+        );
     }
 
     #[test]

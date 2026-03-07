@@ -5,7 +5,9 @@
 
 use geo::Geometry;
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Detects topological gaps between adjacent polygons using R-tree spatial indexing.
 pub struct TopologyGaps;
@@ -47,7 +49,7 @@ impl Rule for TopologyGaps {
     }
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
-        let mut findings = Vec::new();
+        let findings = Vec::new();
 
         for layer in ctx.layers {
             // Collect polygon features for this layer.
@@ -70,7 +72,9 @@ impl Rule for TopologyGaps {
             // R-tree based gap detection: build spatial index, find adjacent polygons,
             // compute difference to detect gap regions.
             // This requires computing the union boundary and finding uncovered areas.
-            todo!("R-tree gap detection: build rstar index from polygon envelopes, query neighbors, compute gap geometries");
+            todo!(
+                "R-tree gap detection: build rstar index from polygon envelopes, query neighbors, compute gap geometries"
+            );
 
             #[allow(unreachable_code)]
             {

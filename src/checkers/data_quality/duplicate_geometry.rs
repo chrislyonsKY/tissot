@@ -1,6 +1,8 @@
 //! Rule: Detect features with identical geometry (duplicates by geometry hash).
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 use std::collections::HashMap;
 
 /// Flags features that share identical geometry, hashed via debug string representation.

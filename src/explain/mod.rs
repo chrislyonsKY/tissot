@@ -6,5 +6,5 @@
 pub mod crs_database;
 pub mod properties;
 
-pub use crs_database::{lookup, CrsEntry};
-pub use properties::{explain_crs, CrsExplanation};
+pub use crs_database::{CrsEntry, lookup};
+pub use properties::{CrsExplanation, explain_crs};

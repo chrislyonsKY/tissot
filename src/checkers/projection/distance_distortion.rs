@@ -3,7 +3,9 @@
 //! Samples pairs of feature centroids and computes the error between
 //! Euclidean distance in the projected CRS and geodesic distance on the ellipsoid.
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Flags layers where projected distances deviate significantly from geodesic distances.
 pub struct DistanceDistortion;
@@ -36,7 +38,7 @@ impl Rule for DistanceDistortion {
     }
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
-        let mut findings = Vec::new();
+        let findings = Vec::new();
 
         for layer in ctx.layers {
             let crs = match &layer.crs {
@@ -70,7 +72,9 @@ impl Rule for DistanceDistortion {
             // Sample centroid pairs, compute projected (Euclidean) vs geodesic distance,
             // and report deviation as percentage error.
             // Requires inverse-projecting points to geographic coords for geodesic calc.
-            todo!("Distance distortion: inverse-project centroids to WGS84 via proj, compute geodesic vs Euclidean distance, report max/mean error");
+            todo!(
+                "Distance distortion: inverse-project centroids to WGS84 via proj, compute geodesic vs Euclidean distance, report max/mean error"
+            );
 
             #[allow(unreachable_code)]
             {

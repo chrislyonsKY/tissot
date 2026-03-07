@@ -3,7 +3,9 @@
 //! When multiple layers reference different coordinate reference systems or datums,
 //! overlaying them without transformation will produce incorrect spatial relationships.
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Flags layers that reference different CRS or datums within the same dataset.
 pub struct DatumMismatch;
@@ -67,9 +69,9 @@ impl Rule for DatumMismatch {
                     }),
                     geometry: None,
                     metric: None,
-                    suggestion: Some(format!(
-                        "Reproject all layers to a common CRS. Run `tissot fix --reproject` to align to a recommended CRS."
-                    )),
+                    suggestion: Some(
+                        "Reproject all layers to a common CRS. Run `tissot fix --reproject` to align to a recommended CRS.".to_string()
+                    ),
                     fixable: true,
                 });
             }

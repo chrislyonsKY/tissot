@@ -5,7 +5,9 @@
 
 use geo::Geometry;
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Detects overlapping polygons using R-tree spatial indexing.
 pub struct TopologyOverlaps;
@@ -47,7 +49,7 @@ impl Rule for TopologyOverlaps {
     }
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
-        let mut findings = Vec::new();
+        let findings = Vec::new();
 
         for layer in ctx.layers {
             // Collect polygon features for this layer.
@@ -70,7 +72,9 @@ impl Rule for TopologyOverlaps {
             // R-tree based overlap detection: build spatial index from envelopes,
             // for each polygon find candidates with overlapping bounding boxes,
             // compute actual polygon intersection to detect overlapping regions.
-            todo!("R-tree overlap detection: build rstar index, query intersecting envelopes, compute pairwise polygon intersections");
+            todo!(
+                "R-tree overlap detection: build rstar index, query intersecting envelopes, compute pairwise polygon intersections"
+            );
 
             #[allow(unreachable_code)]
             {
