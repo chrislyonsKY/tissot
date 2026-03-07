@@ -8,7 +8,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9--3.13-blue?logo=python&logoColor=white" alt="Python"></a>
   <a href="https://crates.io/crates/tissot"><img src="https://img.shields.io/crates/v/tissot" alt="crates.io"></a>
   <a href="https://pypi.org/project/tissot/"><img src="https://img.shields.io/pypi/v/tissot" alt="PyPI"></a>
-  <a href="https://plugins.qgis.org/plugins/tissot_processing_provider/"><img src="https://img.shields.io/badge/QGIS-plugin-93b023?logo=qgis&logoColor=white" alt="QGIS Plugin"></a>
+  <a href="https://plugins.qgis.org/plugins/tissot_processing_provider/"><img src="https://plugins.qgis.org/plugins/tissot_processing_provider/badges/latest_version.svg" alt="QGIS Plugin"></a>
   <a href="https://georust.org/"><img src="https://img.shields.io/badge/GeoRust-ecosystem-green?logo=rust" alt="GeoRust"></a>
   <a href="https://cloudnativegeo.org/"><img src="https://img.shields.io/badge/Cloud_Native_Geo-member-2ea44f" alt="Cloud Native Geo"></a>
 </p>

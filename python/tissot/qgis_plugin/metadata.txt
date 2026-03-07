@@ -2,11 +2,11 @@
 name=Tissot Processing Provider
 qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
-description=QGIS Processing provider wrapping the Tissot Python API for xray, check, score, diff, and fix workflows.
+description=Projection distortion analysis, cartographic linting, map quality scoring, spatial diffing, and autofix — powered by a Rust core.
 version=0.2.0
 author=Tissot Contributors
 email=lyonsw08@gmail.com
-about=Visual-first geospatial diagnostics in QGIS via Tissot Rust core. External dependency: 'tissot' CLI must be installed in the same Python environment used by QGIS.
+about=Tissot brings visual-first geospatial diagnostics into QGIS as a Processing provider. Analyze projection distortion with X-Ray heatmaps and Tissot ellipses, lint your data for cartographic and data quality issues, generate a 0–100 map quality score, visually diff two datasets, and auto-fix problems like suboptimal projections and topology gaps. All computation runs in a high-performance Rust core via the Tissot Python API. Requires the 'tissot' package installed in the same Python environment used by QGIS.
 category=Vector
 icon=icon.png
 hasProcessingProvider=yes
@@ -14,8 +14,8 @@ experimental=True
 deprecated=False
 license=MIT
 tags=geospatial,diagnostics,projection,quality,processing
-homepage=https://github.com/chrislyons/tissot/tree/main/python/tissot/qgis_plugin
-repository=https://github.com/chrislyons/tissot
-tracker=https://github.com/chrislyons/tissot/issues
+homepage=https://github.com/chrislyonsKY/tissot/tree/main/python/tissot/qgis_plugin
+repository=https://github.com/chrislyonsKY/tissot
+tracker=https://github.com/chrislyonsKY/tissot/issues
 changelog=0.2.0 - Added Autofix algorithm (reproject, topology healing).
     0.1.0 - Initial release with processing provider and xray/check/score/diff algorithms.
