@@ -42,6 +42,7 @@ open = "5"
 
 # Utilities
 inventory = "0.3"
+rstar = "0.12"
 
 # IO formats
 geojson = "0.24"
