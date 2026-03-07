@@ -3,6 +3,7 @@
 from pathlib import Path
 import webbrowser
 
+from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -25,6 +26,10 @@ class TissotScoreAlgorithm(QgsProcessingAlgorithm):
     BADGE_OUTPUT = "BADGE_OUTPUT"
     OUTPUT_SCORE = "OUTPUT_SCORE"
     OUTPUT_CATEGORIES = "OUTPUT_CATEGORIES"
+
+    @staticmethod
+    def tr(message):
+        return QCoreApplication.translate("TissotScoreAlgorithm", message)
 
     def name(self):
         return "score"

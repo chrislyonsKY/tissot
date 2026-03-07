@@ -3,7 +3,7 @@
 from pathlib import Path
 import webbrowser
 
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QCoreApplication, QVariant
 from qgis.core import (
     QgsFeature,
     QgsFeatureSink,
@@ -31,6 +31,10 @@ class TissotCheckAlgorithm(QgsProcessingAlgorithm):
     OPEN_REPORT = "OPEN_REPORT"
     OUTPUT_FINDINGS = "OUTPUT_FINDINGS"
     OUTPUT_SCORE = "OUTPUT_SCORE"
+
+    @staticmethod
+    def tr(message):
+        return QCoreApplication.translate("TissotCheckAlgorithm", message)
 
     def name(self):
         return "check"

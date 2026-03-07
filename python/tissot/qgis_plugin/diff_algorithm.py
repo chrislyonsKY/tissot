@@ -3,7 +3,7 @@
 from pathlib import Path
 import webbrowser
 
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QCoreApplication, QVariant
 from qgis.PyQt.QtGui import QColor
 from qgis.core import (
     QgsCategorizedSymbolRenderer,
@@ -34,6 +34,10 @@ class TissotDiffAlgorithm(QgsProcessingAlgorithm):
     INPUT_COMPARISON = "INPUT_COMPARISON"
     OPEN_REPORT = "OPEN_REPORT"
     OUTPUT_CHANGES = "OUTPUT_CHANGES"
+
+    @staticmethod
+    def tr(message):
+        return QCoreApplication.translate("TissotDiffAlgorithm", message)
 
     def name(self):
         return "diff"

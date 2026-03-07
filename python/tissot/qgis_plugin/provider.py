@@ -2,6 +2,7 @@
 
 import os
 
+from qgis.PyQt.QtCore import QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.core import QgsApplication, QgsProcessingProvider
 
@@ -13,6 +14,10 @@ from .xray_algorithm import TissotXrayAlgorithm
 
 class TissotProvider(QgsProcessingProvider):
     """Processing provider that exposes Tissot algorithms."""
+
+    @staticmethod
+    def tr(message):
+        return QCoreApplication.translate("TissotProvider", message)
 
     def id(self):
         return "tissot"

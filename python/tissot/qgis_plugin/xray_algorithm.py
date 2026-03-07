@@ -3,7 +3,7 @@
 from pathlib import Path
 import webbrowser
 
-from qgis.PyQt.QtCore import QVariant
+from qgis.PyQt.QtCore import QCoreApplication, QVariant
 from qgis.core import (
     QgsFeature,
     QgsFeatureSink,
@@ -30,6 +30,10 @@ class TissotXrayAlgorithm(QgsProcessingAlgorithm):
     OPEN_REPORT = "OPEN_REPORT"
     OUTPUT_FINDINGS = "OUTPUT_FINDINGS"
     OUTPUT_RECOMMENDED_EPSG = "OUTPUT_RECOMMENDED_EPSG"
+
+    @staticmethod
+    def tr(message):
+        return QCoreApplication.translate("TissotXrayAlgorithm", message)
 
     def name(self):
         return "xray"
