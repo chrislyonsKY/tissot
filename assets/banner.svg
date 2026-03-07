@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e3a5f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#38bdf8"/>
+      <stop offset="100%" style="stop-color:#818cf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="200" rx="12" fill="url(#bg)"/>
+  <!-- Tissot ellipses decoration -->
+  <ellipse cx="120" cy="100" rx="45" ry="45" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.3"/>
+  <ellipse cx="220" cy="100" rx="50" ry="35" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.25"/>
+  <ellipse cx="600" cy="100" rx="35" ry="50" fill="none" stroke="#818cf8" stroke-width="1.5" opacity="0.25"/>
+  <ellipse cx="700" cy="100" rx="45" ry="45" fill="none" stroke="#818cf8" stroke-width="1.5" opacity="0.3"/>
+  <!-- Distortion grid lines -->
+  <line x1="80" y1="40" x2="80" y2="160" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+  <line x1="160" y1="40" x2="160" y2="160" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+  <line x1="240" y1="40" x2="240" y2="160" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+  <line x1="560" y1="40" x2="560" y2="160" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+  <line x1="640" y1="40" x2="640" y2="160" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+  <line x1="740" y1="40" x2="740" y2="160" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+  <!-- Title -->
+  <text x="400" y="90" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="56" font-weight="700" fill="white" letter-spacing="6">TISSOT</text>
+  <!-- Tagline -->
+  <text x="400" y="125" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" fill="url(#accent)" letter-spacing="2">SEE YOUR DISTORTION</text>
+  <!-- Accent line -->
+  <rect x="300" y="140" width="200" height="2" rx="1" fill="url(#accent)" opacity="0.5"/>
+  <!-- Subtitle -->
+  <text x="400" y="168" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="13" fill="#94a3b8" letter-spacing="1">VISUAL-FIRST GEOSPATIAL DIAGNOSTICS</text>
+</svg>

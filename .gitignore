@@ -24,3 +24,4 @@ build/
 # Local runtime outputs
 .tissot.yml
 *.svg
+!assets/**/*.svg
