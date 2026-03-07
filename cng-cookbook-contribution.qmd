@@ -1,0 +1,197 @@
+---
+title: "Validating Cloud-Optimized Geospatial Data with Tissot"
+---
+
+## Overview
+
+When you convert geospatial data to cloud-optimized formats, how do you verify the result actually follows best practices? Is the spatial index present? Is the CRS metadata embedded correctly? Would a different format serve your access pattern better?
+
+[Tissot](https://github.com/chrislyonsKY/tissot) is an open-source geospatial diagnostics engine that answers these questions with a single command. It inspects your data for cloud-readiness issues alongside projection accuracy, data quality, and cartographic best practices — and renders the results as an interactive map in your browser.
+
+This cookbook shows how to use Tissot to validate cloud-optimized geospatial data in your pipelines.
+
+## Prerequisites
+
+```bash
+# Install via Rust
+cargo install tissot
+
+# Or via Python
+pip install tissot
+```
+
+## Checking a Dataset for Cloud Readiness
+
+### Basic Check
+
+Run `tissot check` on any geospatial file to get a comprehensive diagnostic report, including cloud optimization findings:
+
+```bash
+tissot check my_parcels.shp
+```
+
+Tissot automatically detects the format and runs appropriate rules. For a Shapefile, you might see:
+
+```
+  CLOUD READINESS
+  ─────────────────────────────────────────────
+  ⚠ cloud/format-recommendation
+    Dataset is in Shapefile format, which is not cloud-optimized.
+    For cloud-native workflows, consider FlatGeobuf (streamable,
+    spatially indexed) or GeoParquet (columnar, compressed).
+    → https://guide.cloudnativegeo.org/
+
+  ✗ cloud/crs-metadata
+    Shapefile is missing .prj file. CRS is unknown.
+
+  ✗ cloud/multi-file-integrity
+    Shapefile is missing .cpg file. Character encoding is ambiguous.
+```
+
+### Cloud-Specific Checks Only
+
+To focus exclusively on cloud optimization rules:
+
+```bash
+tissot check my_data.fgb --domain cloud
+```
+
+### JSON Output for CI/CD
+
+For automated pipelines, use JSON output and integrate with your CI system:
+
+```bash
+tissot check output.parquet --domain cloud --json
+```
+
+```json
+{
+  "findings": [
+    {
+      "rule_id": "cloud/spatial-index",
+      "severity": "warning",
+      "message": "GeoParquet file lacks bbox column...",
+      "fixable": true
+    }
+  ],
+  "score": {
+    "cloud_readiness": 72,
+    "grade": "C"
+  }
+}
+```
+
+### SARIF Output for GitHub
+
+Tissot produces SARIF output for integration with GitHub Advanced Security:
+
+```bash
+tissot check data.parquet --sarif > results.sarif
+```
+
+## Common Workflows
+
+### Validating a Shapefile-to-FlatGeobuf Conversion
+
+After converting legacy Shapefiles to FlatGeobuf:
+
+```bash
+# Convert with ogr2ogr
+ogr2ogr -f FlatGeobuf output.fgb input.shp
+
+# Validate the result
+tissot check output.fgb
+```
+
+Tissot verifies that the FlatGeobuf includes a spatial index, has CRS metadata embedded, and that no data was lost in conversion.
+
+### Validating GeoParquet Output from a Pipeline
+
+When your ETL pipeline produces GeoParquet:
+
+```bash
+tissot check pipeline_output.parquet --domain cloud
+```
+
+Tissot checks for the `geo` metadata key in the Parquet schema, validates CRS encoding, checks for compression, and flags if the file would benefit from spatial partitioning.
+
+### Scoring Data for Cloud Readiness
+
+Get a Lighthouse-style quality score with cloud readiness as a category:
+
+```bash
+tissot score my_data.fgb
+```
+
+```
+  TISSOT SCORE: 91/100 (A)
+  ─────────────────────────────────────────────
+  Projection Quality:    A  (98/100)
+  Data Integrity:        A  (95/100)
+  Cloud Readiness:       B  (82/100)
+    → Spatial index: present ✓
+    → CRS metadata: present ✓
+    → Compression: not applicable (FlatGeobuf)
+    → File size: 245MB — consider partitioning
+```
+
+### Generating a README Badge
+
+For repositories hosting cloud-optimized data:
+
+```bash
+tissot score my_data.parquet --badge cloud-score.svg
+```
+
+Embed in your README:
+```markdown
+![Tissot Cloud Score](./cloud-score.svg)
+```
+
+## Python API
+
+For integration with data processing scripts:
+
+```python
+import tissot
+
+# Check cloud readiness
+report = tissot.check("data.parquet", domain="cloud")
+for finding in report.findings:
+    print(f"[{finding.severity}] {finding.rule_id}: {finding.message}")
+
+# Get cloud readiness score
+report = tissot.score("data.fgb")
+print(f"Cloud Readiness: {report.categories['cloud_readiness']}/100")
+```
+
+## Watching a Pipeline Output Directory
+
+For continuous monitoring of ETL pipeline outputs:
+
+```bash
+tissot watch ./pipeline/output/ --domain cloud
+```
+
+Tissot monitors the directory for new or changed files, re-runs cloud optimization checks, and streams results to a live dashboard in your browser.
+
+## Format Decision Guide
+
+Tissot's `cloud/format-recommendation` rule follows this decision logic, aligned with the [CNG Formats Guide](https://guide.cloudnativegeo.org/):
+
+| Your Data | Your Access Pattern | Recommended Format |
+|---|---|---|
+| Vector, any size | Streaming / spatial queries | FlatGeobuf |
+| Vector, analytical queries | Columnar filtering / aggregation | GeoParquet |
+| Vector, small (< 10MB) | Simple web display | GeoJSON (acceptable) |
+| Vector, any | Local desktop GIS only | GeoPackage (acceptable locally) |
+| Raster, single band | HTTP range request access | Cloud Optimized GeoTIFF (COG) |
+| Raster, multi-dimensional | Datacube analysis | Zarr V3 |
+| Tiles, vector | Web map display | PMTiles |
+
+## Further Reading
+
+- [Cloud-Optimized Geospatial Formats Guide](https://guide.cloudnativegeo.org/) — The definitive community resource on cloud-native formats
+- [GeoParquet Specification](https://github.com/opengeospatial/geoparquet) — OGC standard for vector data in Parquet
+- [FlatGeobuf](https://flatgeobuf.org/) — Performant binary encoding for geographic data
+- [Tissot Documentation](https://chrislyonsKY.github.io/tissot) — Full Tissot user guide

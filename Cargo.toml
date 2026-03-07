@@ -1,0 +1,68 @@
+[package]
+name = "tissot"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Visual-first geospatial diagnostics engine: projection x-ray, cartographic linting, spatial diffing, and autofix"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/chrislyons/tissot"
+keywords = ["geospatial", "projection", "cartography", "gis", "diagnostics"]
+categories = ["science::geo", "command-line-utilities"]
+
+[lib]
+name = "tissot"
+path = "src/lib.rs"
+
+[[bin]]
+name = "tissot"
+path = "src/main.rs"
+
+[dependencies]
+# Core
+thiserror = "2"
+log = "0.4"
+env_logger = "0.11"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+
+# Geometry & CRS
+geo = "0.29"
+proj = "0.28"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+
+# Web server & templates
+axum = "0.8"
+askama = "0.13"
+tokio = { version = "1", features = ["full"] }
+open = "5"
+
+# Utilities
+inventory = "0.3"
+
+# IO formats
+geojson = "0.24"
+shapefile = "0.6"
+flatgeobuf = "4"
+
+# Watch mode
+notify = "7"
+
+# Diff
+similar = "2"
+
+[dev-dependencies]
+approx = "0.5"
+tempfile = "3"
+
+[features]
+default = []
+gdal = []
+full = ["gdal"]
+
+[profile.release]
+lto = true
+codegen-units = 1

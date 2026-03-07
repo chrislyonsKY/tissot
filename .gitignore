@@ -1,0 +1,26 @@
+target/
+Cargo.lock
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Packaging/build
+dist/
+build/
+*.egg-info/
+
+# Logs and temp
+*.log
+*.tmp
+.DS_Store
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Local runtime outputs
+.tissot.yml
+*.svg
