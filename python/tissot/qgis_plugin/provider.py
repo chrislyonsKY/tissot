@@ -8,6 +8,7 @@ from qgis.core import QgsApplication, QgsProcessingProvider
 
 from .check_algorithm import TissotCheckAlgorithm
 from .diff_algorithm import TissotDiffAlgorithm
+from .fix_algorithm import TissotFixAlgorithm
 from .score_algorithm import TissotScoreAlgorithm
 from .xray_algorithm import TissotXrayAlgorithm
 
@@ -39,6 +40,7 @@ class TissotProvider(QgsProcessingProvider):
         self.addAlgorithm(TissotCheckAlgorithm())
         self.addAlgorithm(TissotScoreAlgorithm())
         self.addAlgorithm(TissotDiffAlgorithm())
+        self.addAlgorithm(TissotFixAlgorithm())
 
 
 class TissotPlugin:

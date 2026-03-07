@@ -2,8 +2,8 @@
 name=Tissot Processing Provider
 qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
-description=QGIS Processing provider wrapping the Tissot Python API for xray, check, score, and diff workflows.
-version=0.1.0
+description=QGIS Processing provider wrapping the Tissot Python API for xray, check, score, diff, and fix workflows.
+version=0.2.0
 author=Tissot Contributors
 email=lyonsw08@gmail.com
 about=Visual-first geospatial diagnostics in QGIS via Tissot Rust core. External dependency: 'tissot' CLI must be installed in the same Python environment used by QGIS.
@@ -17,4 +17,5 @@ tags=geospatial,diagnostics,projection,quality,processing
 homepage=https://github.com/chrislyons/tissot/tree/main/python/tissot/qgis_plugin
 repository=https://github.com/chrislyons/tissot
 tracker=https://github.com/chrislyons/tissot/issues
-changelog=0.1.0 - Initial release with processing provider and xray/check/score/diff algorithms.
+changelog=0.2.0 - Added Autofix algorithm (reproject, topology healing).
+    0.1.0 - Initial release with processing provider and xray/check/score/diff algorithms.

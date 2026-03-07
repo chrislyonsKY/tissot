@@ -175,3 +175,19 @@ def diff(baseline_path: str, comparison_path: str) -> dict[str, Any]:
 
     report["changes"] = changes
     return report
+
+
+def fix(
+    input_path: str,
+    reproject: str | None = None,
+    topology: bool = False,
+    in_place: bool = False,
+) -> dict[str, Any]:
+    args = ["fix", input_path]
+    if reproject:
+        args.extend(["--reproject", reproject])
+    if topology:
+        args.append("--topology")
+    if in_place:
+        args.append("--in-place")
+    return _run_json(args)
