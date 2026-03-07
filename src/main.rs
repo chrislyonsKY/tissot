@@ -326,6 +326,7 @@ fn parse_domain(s: &str) -> Option<tissot::core::rule::Domain> {
         }
         "cartography" | "carto" => Some(tissot::core::rule::Domain::Cartography),
         "diff" => Some(tissot::core::rule::Domain::Diff),
+        "cloud" | "cloud-native" => Some(tissot::core::rule::Domain::Cloud),
         _ => None,
     }
 }

@@ -36,7 +36,7 @@ impl Rule for DistanceDistortion {
     }
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
-        let mut findings = Vec::new();
+        let findings = Vec::new();
 
         for layer in ctx.layers {
             let crs = match &layer.crs {

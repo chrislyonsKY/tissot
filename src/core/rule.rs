@@ -17,6 +17,8 @@ pub enum Domain {
     Cartography,
     /// Geometry change detection, feature add/remove, attribute diff.
     Diff,
+    /// Cloud-native format validation, spatial indexing, compression.
+    Cloud,
 }
 
 impl std::fmt::Display for Domain {
@@ -26,6 +28,7 @@ impl std::fmt::Display for Domain {
             Domain::DataQuality => write!(f, "data_quality"),
             Domain::Cartography => write!(f, "cartography"),
             Domain::Diff => write!(f, "diff"),
+            Domain::Cloud => write!(f, "cloud"),
         }
     }
 }

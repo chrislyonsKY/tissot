@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/license-MIT%2FApache--2.0-blue" alt="License"></a>
-  <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-1.83%2B-orange?logo=rust" alt="Rust"></a>
+  <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/rust-1.85%2B-orange?logo=rust" alt="Rust"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9--3.13-blue?logo=python&logoColor=white" alt="Python"></a>
   <a href="https://crates.io/crates/tissot"><img src="https://img.shields.io/crates/v/tissot" alt="crates.io"></a>
   <a href="https://pypi.org/project/tissot/"><img src="https://img.shields.io/pypi/v/tissot" alt="PyPI"></a>
@@ -132,7 +132,37 @@ Rust core using the [GeoRust](https://georust.org/) ecosystem. Python bindings v
 
 ## Status
 
-🚧 **In Development** — Phase 1 (X-Ray + Data Quality + Cloud Optimization + Score)
+🚧 **In Development** — Building toward first release.
+
+### What's Implemented
+
+**Projection X-Ray** (`tissot xray`) — Jacobian-based per-feature distortion analysis, distortion heatmap generation (IDW interpolation), Tissot ellipse rendering as GeoJSON polygons, CRS recommendation engine with UTM/state-plane/continental candidate ranking, stratified sampling for large datasets.
+
+**Checker Engine** — 20 diagnostic rules across three domains:
+
+| Domain | Rules | Examples |
+|--------|-------|---------|
+| Data Quality (9) | null geometry, duplicate features/geometry, self-intersection, topology gaps & overlaps, schema validation, extent bounds, empty dataset | `data/null-geometry`, `data/topology-gaps` |
+| Projection (5) | area distortion, distance distortion, datum mismatch, high distortion, missing CRS | `proj/area-distortion`, `proj/datum-mismatch` |
+| Cloud (6) | format recommendation, CRS metadata, multi-file integrity, spatial index, compression, file size | `cloud/format-recommendation`, `cloud/crs-metadata` |
+
+**Score Engine** (`tissot score`) — Weighted 0-100 quality score with category breakdown (Projection 0.25, Data Integrity 0.30, Accessibility 0.20, Cloud Readiness 0.20, Classification 0.05). Letter grades A-F. SVG badge generation.
+
+**Profile & Explain** — Dataset summary (format, layers, CRS, extents, field counts) and curated EPSG reference database with plain-English CRS explanations.
+
+**IO Layer** — Pure Rust readers for GeoJSON, Shapefile, FlatGeobuf via geozero. Optional GDAL fallback behind feature flag.
+
+**Report Outputs** — Terminal, JSON, SARIF (for CI/CD), and visual HTML report scaffolding.
+
+**CLI** — All commands wired: `xray`, `check`, `score`, `profile`, `explain`, `fix`, `diff`, `watch`, `init`.
+
+### What's Next
+
+- Visual report server (interactive MapLibre browser maps)
+- Fix engine implementation (reproject, topology healing)
+- Diff engine (spatial change detection with slider)
+- Watch mode (live directory monitoring)
+- Python bindings via PyO3
 
 ## License
 

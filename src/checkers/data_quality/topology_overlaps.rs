@@ -47,7 +47,7 @@ impl Rule for TopologyOverlaps {
     }
 
     fn check(&self, ctx: &CheckContext) -> Vec<Finding> {
-        let mut findings = Vec::new();
+        let findings = Vec::new();
 
         for layer in ctx.layers {
             // Collect polygon features for this layer.

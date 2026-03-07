@@ -75,7 +75,7 @@ fn detect_geometry_type(layer: &Layer) -> String {
     // If mixed, report the most common type with "Mixed" prefix.
     let dominant = type_counts
         .iter()
-        .max_by_key(|(_, &count)| count)
+        .max_by_key(|(_, count)| *count)
         .map(|(name, _)| *name)
         .unwrap_or("Unknown");
 

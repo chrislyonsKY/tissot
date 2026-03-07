@@ -1,4 +1,5 @@
 /// Checker engine — runs diagnostic rules against geospatial data.
+pub mod cloud;
 pub mod data_quality;
 pub mod projection;
 

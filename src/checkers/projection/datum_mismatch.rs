@@ -67,9 +67,9 @@ impl Rule for DatumMismatch {
                     }),
                     geometry: None,
                     metric: None,
-                    suggestion: Some(format!(
-                        "Reproject all layers to a common CRS. Run `tissot fix --reproject` to align to a recommended CRS."
-                    )),
+                    suggestion: Some(
+                        "Reproject all layers to a common CRS. Run `tissot fix --reproject` to align to a recommended CRS.".to_string()
+                    ),
                     fixable: true,
                 });
             }
