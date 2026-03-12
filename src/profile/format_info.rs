@@ -71,7 +71,9 @@ pub fn detect_format(path: &str) -> Option<FormatInfo> {
             name: "GeoTIFF".into(),
             extension: ".tif".into(),
             cloud_optimized: false,
-            cng_guide_url: Some("https://guide.cloudnativegeo.org/cloud-optimized-geotiffs/".into()),
+            cng_guide_url: Some(
+                "https://guide.cloudnativegeo.org/cloud-optimized-geotiffs/".into(),
+            ),
         })
     } else if lower.ends_with(".qgz") || lower.ends_with(".qgs") {
         Some(FormatInfo {

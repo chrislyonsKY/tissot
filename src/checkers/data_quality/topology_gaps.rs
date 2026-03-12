@@ -5,7 +5,9 @@
 
 use geo::Geometry;
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Detects topological gaps between adjacent polygons using R-tree spatial indexing.
 pub struct TopologyGaps;

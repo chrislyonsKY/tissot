@@ -109,9 +109,7 @@ fn collect_field_names(layer: &Layer) -> usize {
 ///
 /// Reads file metadata from disk for the file size.
 pub fn generate_profile(layers: &[Layer], input_path: &str, format_name: &str) -> ProfileSummary {
-    let file_size_bytes = std::fs::metadata(input_path)
-        .map(|m| m.len())
-        .unwrap_or(0);
+    let file_size_bytes = std::fs::metadata(input_path).map(|m| m.len()).unwrap_or(0);
 
     let layer_profiles: Vec<LayerProfile> = layers
         .iter()

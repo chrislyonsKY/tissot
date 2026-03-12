@@ -3,7 +3,9 @@
 //! Infers the expected schema from the first feature's properties and checks
 //! all subsequent features for type mismatches and unexpected null values.
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 use std::collections::HashMap;
 
 /// Flags features whose attribute types differ from the inferred layer schema.
@@ -92,10 +94,7 @@ impl Rule for SchemaValidation {
 
             // Check subsequent features against inferred schema.
             for (idx, feature) in layer.features.iter().enumerate().skip(1) {
-                let feature_label = feature
-                    .id
-                    .clone()
-                    .unwrap_or_else(|| format!("#{idx}"));
+                let feature_label = feature.id.clone().unwrap_or_else(|| format!("#{idx}"));
 
                 for (key, expected_type) in &schema {
                     match feature.properties.get(key) {
@@ -192,7 +191,10 @@ mod tests {
     #[test]
     fn detects_type_mismatch() {
         let mut props1 = HashMap::new();
-        props1.insert("name".to_string(), serde_json::Value::String("hello".into()));
+        props1.insert(
+            "name".to_string(),
+            serde_json::Value::String("hello".into()),
+        );
         props1.insert("value".to_string(), serde_json::json!(42));
 
         let mut props2 = HashMap::new();
@@ -234,7 +236,10 @@ mod tests {
     #[test]
     fn detects_unexpected_null() {
         let mut props1 = HashMap::new();
-        props1.insert("name".to_string(), serde_json::Value::String("hello".into()));
+        props1.insert(
+            "name".to_string(),
+            serde_json::Value::String("hello".into()),
+        );
 
         let mut props2 = HashMap::new();
         props2.insert("name".to_string(), serde_json::Value::Null);

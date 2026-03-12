@@ -1,0 +1,492 @@
+---
+title: "CNG Format Validation Sections"
+---
+
+<!--
+  These three sections are designed to be PR'd into the corresponding format
+  pages in the Cloud-Native Geospatial Formats Guide
+  (https://guide.cloudnativegeo.org/).  See the contributor note at the bottom
+  of this file for placement guidance.
+-->
+
+## Validating Your FlatGeobuf
+
+### Spatial Index
+
+FlatGeobuf optionally embeds a packed Hilbert R-tree spatial index in the file
+header.  When the index is present, spatial queries can seek directly to the
+relevant features using HTTP range requests.  When it is absent, any spatial
+filter — local or remote — requires a full sequential scan of the entire file.
+
+**Why it matters:** A missing spatial index doesn't cause an error; the file
+reads just fine.  The cost only surfaces at query time, when a bounding-box
+filter that should read a few kilobytes ends up transferring the whole file.
+
+**How to verify:**
+
+```bash
+# ogrinfo reports "Has a spatial index: YES/NO" in the layer summary
+ogrinfo -al -so my_data.fgb
+```
+
+Look for the line:
+
+```
+Has a spatial index: YES
+```
+
+From Python using Fiona:
+
+```python
+import fiona
+
+with fiona.open("my_data.fgb") as src:
+    has_index = src.meta.get("spatial_index", False)
+    print(f"Spatial index present: {has_index}")
+```
+
+**How to fix:**
+
+Re-write the file with `ogr2ogr`, explicitly requesting the spatial index layer
+creation option:
+
+```bash
+ogr2ogr -f FlatGeobuf -lco SPATIAL_INDEX=YES output_indexed.fgb my_data.fgb
+```
+
+---
+
+### CRS Metadata
+
+The coordinate reference system is stored in the FlatGeobuf file header as a
+Spatial Reference System (SRS) record.  FlatGeobuf does **not** default to
+WGS 84 — if no CRS was written at creation time the field is simply absent, and
+downstream tools will either guess or fail.
+
+**Why it matters:** Missing CRS metadata is silent.  Reprojection pipelines will
+apply the wrong transform, overlays will be misaligned, and web maps may place
+features in the wrong hemisphere.
+
+**How to verify:**
+
+```bash
+# Layer Projection summary includes the CRS WKT when present
+ogrinfo -al -so my_data.fgb
+```
+
+An unset CRS produces:
+
+```
+Layer SRS WKT:
+(unknown)
+```
+
+**How to fix:**
+
+Assign the correct authority code using `ogr2ogr -a_srs`.  This rewrites the
+header without re-projecting the coordinates, so only use it when you know the
+coordinates are already in the target CRS:
+
+```bash
+# Assign EPSG:4326 (WGS 84 geographic) to a file that is missing CRS metadata
+ogr2ogr -f FlatGeobuf -a_srs EPSG:4326 output_with_crs.fgb my_data_no_crs.fgb
+```
+
+If the coordinates need to be *re-projected* (not just labelled), use `-t_srs`
+instead:
+
+```bash
+ogr2ogr -f FlatGeobuf -t_srs EPSG:4326 output_reprojected.fgb my_data.fgb
+```
+
+---
+
+### When to Choose FlatGeobuf vs. GeoParquet
+
+Both formats are cloud-native vector formats; the right choice depends on your
+dominant access pattern.
+
+| Scenario | Prefer |
+|---|---|
+| Streaming features in order (e.g., rendering a tile) | FlatGeobuf |
+| Spatial bounding-box queries over HTTP | FlatGeobuf |
+| Filtering by attribute columns (e.g., `WHERE land_use = 'residential'`) | GeoParquet |
+| Aggregations and analytics across many features | GeoParquet |
+| Interoperability with the Arrow/Parquet ecosystem | GeoParquet |
+| Single-file simplicity with broad GDAL support | FlatGeobuf |
+
+If your workflow is primarily spatial — you mostly ask "give me everything
+inside this bounding box" — FlatGeobuf's Hilbert R-tree gives you efficient
+range reads without any additional tooling.  If your workflow is primarily
+analytical — you mostly ask "how many features of type X are in each region?" —
+GeoParquet's columnar layout lets you read only the columns you need and
+compress them efficiently.
+
+---
+
+## Validating Your GeoParquet
+
+### Geo Metadata
+
+GeoParquet extends the Apache Parquet format with a required `geo` key in the
+Parquet file-level metadata.  This JSON object records which column holds
+geometry, the CRS expressed as PROJJSON, the geometry type(s) present, and an
+optional bounding box.  Without it the file is valid Parquet but not valid
+GeoParquet — geometry-aware tools will refuse to open it or silently treat the
+geometry column as opaque bytes.
+
+**Why it matters:** A GeoParquet file missing the `geo` metadata key cannot be
+correctly ingested by spec-compliant tools.  The geometry column exists but its
+CRS, type, and encoding are unknown.
+
+**How to verify:**
+
+```python
+import json
+import pyarrow.parquet as pq
+
+meta = pq.read_metadata("my_data.parquet")
+raw = meta.metadata  # dict of bytes keys → bytes values
+
+if b"geo" not in raw:
+    print("ERROR: 'geo' metadata key is missing — not a valid GeoParquet file")
+else:
+    geo = json.loads(raw[b"geo"])
+    print(json.dumps(geo, indent=2))
+```
+
+A compliant file produces output similar to:
+
+```json
+{
+  "version": "1.0.0",
+  "primary_column": "geometry",
+  "columns": {
+    "geometry": {
+      "encoding": "WKB",
+      "geometry_types": ["Polygon"],
+      "crs": { ... }   // PROJJSON object
+    }
+  }
+}
+```
+
+**How to fix:**
+
+Re-write the file through GeoPandas, which sets the `geo` metadata key
+automatically:
+
+```python
+import geopandas as gpd
+
+gdf = gpd.read_file("my_data.fgb")          # or any source GeoPandas can open
+gdf.to_parquet("my_data_valid.parquet")      # writes compliant GeoParquet
+```
+
+---
+
+### CRS Encoding
+
+The GeoParquet specification requires that the CRS be expressed as
+[PROJJSON](https://proj.org/en/stable/specifications/projjson.html) — a
+JSON encoding of the PROJ coordinate reference system model.  WKT1, WKT2,
+and bare EPSG codes are not conformant, though some tools emit them anyway.
+
+**Why it matters:** A WKT1 CRS string is not machine-parseable by all
+PROJJSON-aware clients.  A missing CRS is worse: the file is spatially ambiguous
+and cannot be safely re-projected.
+
+**How to verify:**
+
+```python
+import json
+import pyarrow.parquet as pq
+
+meta = pq.read_metadata("my_data.parquet")
+geo = json.loads(meta.metadata[b"geo"])
+
+crs_value = geo["columns"]["geometry"].get("crs")
+
+if crs_value is None:
+    print("WARNING: CRS is missing from geo metadata")
+elif isinstance(crs_value, str):
+    print(f"WARNING: CRS is encoded as a plain string (likely WKT1 or EPSG code): {crs_value!r}")
+elif isinstance(crs_value, dict):
+    print(f"OK: CRS is PROJJSON — type: {crs_value.get('type')}, name: {crs_value.get('name')}")
+```
+
+**How to fix:**
+
+GeoPandas writes PROJJSON automatically when the GeoDataFrame has a valid CRS:
+
+```python
+import geopandas as gpd
+
+gdf = gpd.read_file("my_data_bad_crs.parquet")
+
+# If the CRS is missing, set it explicitly (only when you know the correct one)
+if gdf.crs is None:
+    gdf = gdf.set_crs("EPSG:4326")
+
+# Re-write; GeoPandas encodes the CRS as PROJJSON
+gdf.to_parquet("my_data_fixed.parquet")
+```
+
+---
+
+### Compression
+
+Parquet supports per-column compression codecs.  The GeoParquet specification
+does not mandate a specific codec, but community benchmarks consistently show
+**Zstandard (zstd)** offering the best balance of compression ratio and read
+speed.  Zstd typically reduces file size by 50–70 % compared to uncompressed,
+and outperforms the older Snappy and Gzip codecs in decompress throughput.
+
+**Why it matters:** An uncompressed or poorly compressed GeoParquet file
+transfers more bytes over HTTP for every query, increasing latency and egress
+cost.  Compression is free when it is set at write time.
+
+**How to verify:**
+
+```python
+import pyarrow.parquet as pq
+
+pf = pq.ParquetFile("my_data.parquet")
+schema = pf.schema_arrow
+
+# Read compression from the first row group's column chunks
+rg = pf.metadata.row_group(0)
+for i in range(rg.num_columns):
+    col = rg.column(i)
+    print(f"{col.path_in_schema}: {col.compression}")
+```
+
+Sample output for a well-configured file:
+
+```
+geometry: ZSTD
+name: ZSTD
+area_sqm: ZSTD
+```
+
+**How to fix:**
+
+Re-write with GeoPandas, specifying the compression codec:
+
+```python
+import geopandas as gpd
+
+gdf = gpd.read_parquet("my_data.parquet")
+gdf.to_parquet("my_data_zstd.parquet", compression="zstd")
+```
+
+---
+
+### Bounding Box Column
+
+GeoParquet optionally supports dedicated `minx`, `miny`, `maxx`, `maxy` columns
+(a *bbox column*) alongside the primary geometry column.  Because Parquet
+stores column statistics per row group, these numeric columns let spatial query
+engines apply row-group-level bounding-box pruning without decoding any WKB
+geometry.
+
+**Why it matters:** Without bbox columns, a spatial filter must decode every
+geometry to determine whether it intersects the query extent.  With bbox
+columns, row groups that don't overlap the query extent can be skipped entirely
+during the metadata scan — before any geometry is read.
+
+**How to verify:**
+
+```python
+import json
+import pyarrow.parquet as pq
+
+meta = pq.read_metadata("my_data.parquet")
+geo = json.loads(meta.metadata[b"geo"])
+
+bbox_col = geo["columns"]["geometry"].get("bbox")
+if bbox_col:
+    print(f"Bbox column present: {bbox_col}")
+else:
+    print("No bbox column — row-group spatial pruning is not available")
+```
+
+You can also inspect the schema directly to check for the column names:
+
+```python
+import pyarrow.parquet as pq
+
+schema = pq.read_schema("my_data.parquet")
+names = schema.names
+has_bbox = all(c in names for c in ("minx", "miny", "maxx", "maxy"))
+print(f"Bbox columns present: {has_bbox}")
+```
+
+---
+
+### When to Choose GeoParquet vs. FlatGeobuf
+
+See the comparison table in the FlatGeobuf validation section above (search for
+"When to Choose FlatGeobuf vs. GeoParquet").  In summary: choose GeoParquet when
+your primary operations are attribute-based filtering, aggregation, or
+integration with the Arrow/Parquet/DuckDB ecosystem; choose FlatGeobuf when your
+primary operation is streaming or bounding-box spatial queries.
+
+<!-- NOTE for contributors: when this section is copied into the CNG Formats Guide
+     as a standalone page, replace the reference above with a direct link to the
+     FlatGeobuf page rather than an in-page anchor. -->
+
+---
+
+## Validating Your Shapefile Before Migration
+
+Shapefiles are not a cloud-native format, but they remain common source data for
+migration pipelines.  Validating a Shapefile *before* converting it avoids
+propagating silent errors into the destination format.
+
+### Multi-File Integrity
+
+A Shapefile is a collection of sidecar files that must be present together.
+When any required file is missing, geometry or attributes are unreadable.  When
+a recommended file is missing, CRS or character encoding information is lost —
+often silently.
+
+**Required files:**
+
+| File | Contains | Missing means |
+|---|---|---|
+| `.shp` | Geometry records | File cannot be opened |
+| `.shx` | Fixed-length geometry index | Random access is impossible; some tools reconstruct it, others refuse to open the file |
+| `.dbf` | Attribute table (dBASE III) | All attribute data is lost |
+
+**Recommended files:**
+
+| File | Contains | Missing means |
+|---|---|---|
+| `.prj` | CRS as WKT1 string | CRS is unknown; reprojection will be wrong or impossible |
+| `.cpg` | Character encoding declaration (e.g., `UTF-8`) | Encoding defaults to the platform locale; non-ASCII text corrupts |
+
+**Why it matters:** A Shapefile with a missing `.prj` opens without error in
+most tools, which either assume WGS 84 or present the layer as "unknown CRS."
+Both outcomes cause silent georeferencing problems downstream.  A missing `.cpg`
+causes character corruption only when the attribute data contains non-ASCII
+characters — a failure mode that only appears after deployment.
+
+**How to verify:**
+
+```python
+import os
+
+def check_shapefile(base_path: str) -> None:
+    """
+    Check for required and recommended Shapefile sidecar files.
+    base_path should be the path without extension, e.g. '/data/parcels'.
+    """
+    required = [".shp", ".shx", ".dbf"]
+    recommended = [".prj", ".cpg"]
+
+    missing_required = [ext for ext in required if not os.path.exists(base_path + ext)]
+    missing_recommended = [ext for ext in recommended if not os.path.exists(base_path + ext)]
+
+    if missing_required:
+        print(f"ERROR: Missing required files: {missing_required}")
+    else:
+        print("Required files: OK")
+
+    if missing_recommended:
+        print(f"WARNING: Missing recommended files: {missing_recommended}")
+        if ".prj" in missing_recommended:
+            print("  → CRS will be unknown; assign with 'ogr2ogr -a_srs' after conversion")
+        if ".cpg" in missing_recommended:
+            print("  → Character encoding is ambiguous; verify attribute text after conversion")
+    else:
+        print("Recommended files: OK")
+
+check_shapefile("/path/to/my_parcels")
+```
+
+You can also use `ogrinfo` for a quick summary:
+
+```bash
+ogrinfo -al -so my_parcels.shp
+```
+
+If the `.prj` is missing, the `Layer SRS WKT` line will show `(unknown)`.
+
+---
+
+### 2 GB File Size Limit
+
+The Shapefile format stores geometry record offsets as 32-bit integers
+(measured in 16-bit words), giving a maximum `.shp` file size of **2 GB**.
+When a dataset exceeds this limit, `ogr2ogr` and most other conversion tools
+silently truncate the output — they write as many features as fit and stop
+without raising an error.
+
+**Why it matters:** Silent truncation means you can produce a GeoParquet or
+FlatGeobuf file that appears valid but is missing features.  There is no
+checksum or row count in the Shapefile header that would alert downstream tools.
+
+**How to verify:**
+
+```bash
+# Check .shp file size before converting
+ls -lh my_large_dataset.shp
+```
+
+```python
+import os
+
+BYTES_PER_GB = 1024 ** 3
+limit_bytes = 2 * BYTES_PER_GB  # 2 GB Shapefile ceiling
+
+shp_size_bytes = os.path.getsize("my_large_dataset.shp")
+
+if shp_size_bytes >= limit_bytes:
+    print(f"ERROR: .shp file is {shp_size_bytes / 1024**3:.2f} GB — at or above the 2 GB limit.")
+    print("Features were likely silently truncated when this file was written.")
+elif shp_size_bytes > limit_bytes * 0.9:
+    print(f"WARNING: .shp file is {shp_size_bytes / 1024**3:.2f} GB — approaching the 2 GB limit.")
+else:
+    print(f"File size OK: {shp_size_bytes / 1024**2:.1f} MB")
+```
+
+Cross-check the feature count in the source against the converted output:
+
+```bash
+# Count features in the source Shapefile
+ogrinfo -al -so my_large_dataset.shp | grep "Feature Count"
+
+# Count features in the converted output
+ogrinfo -al -so output.parquet | grep "Feature Count"
+```
+
+If the counts differ, features were truncated during a prior conversion step.
+Go back to the original data source (database, API, or archive) rather than
+attempting to recover from the truncated Shapefile.
+
+---
+
+<!--
+  CONTRIBUTOR NOTE
+  ────────────────────────────────────────────────────────────────────────────
+  The three sections above ("Validating Your FlatGeobuf", "Validating Your
+  GeoParquet", "Validating Your Shapefile Before Migration") are designed to
+  slot into the end of their respective format pages in the CNG Formats Guide
+  (https://guide.cloudnativegeo.org/), immediately before each page's existing
+  "Further Reading" section.
+
+  When submitting PRs to the guide:
+  - Copy only the relevant section — do not include the other two sections or
+    this contributor note.
+  - Adjust heading levels to match the page's existing heading hierarchy.
+  - Remove the cross-reference link between sections (the "See the comparison
+    table …" line in the GeoParquet section) unless both sections appear on the
+    same page.
+  - The "See also" reference to Tissot below each section is optional; include
+    it if the guide page already links to third-party tools.
+
+  See also: [Tissot](https://github.com/chrislyonsKY/tissot) — open-source
+  geospatial diagnostics engine that automates the checks described above.
+  ────────────────────────────────────────────────────────────────────────────
+-->

@@ -5,7 +5,9 @@
 
 use geo::Geometry;
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Flags geometries with self-intersecting rings (invalid geometry).
 pub struct SelfIntersection;
@@ -126,10 +128,7 @@ impl Rule for SelfIntersection {
                 };
 
                 if has_self_intersection(geom) {
-                    let feature_label = feature
-                        .id
-                        .clone()
-                        .unwrap_or_else(|| format!("#{idx}"));
+                    let feature_label = feature.id.clone().unwrap_or_else(|| format!("#{idx}"));
 
                     findings.push(Finding {
                         rule_id: self.id().to_string(),
