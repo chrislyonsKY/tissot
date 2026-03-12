@@ -24,7 +24,10 @@ fn read_simple_points_geojson() {
 
     // Both features should have Point geometry
     for feat in &layer.features {
-        assert!(feat.geometry.is_some(), "every feature should have geometry");
+        assert!(
+            feat.geometry.is_some(),
+            "every feature should have geometry"
+        );
     }
 
     // Verify bounds are computed
@@ -107,10 +110,18 @@ fn read_parcels_with_issues_mixed_content() {
     let layers = io::read_file(&fixture("parcels_with_issues.geojson")).unwrap();
     let layer = &layers[0];
 
-    assert_eq!(layer.features.len(), 10, "parcels_with_issues has 10 features");
+    assert_eq!(
+        layer.features.len(),
+        10,
+        "parcels_with_issues has 10 features"
+    );
 
     // Should contain at least one feature with null geometry (P004)
-    let null_geom_count = layer.features.iter().filter(|f| f.geometry.is_none()).count();
+    let null_geom_count = layer
+        .features
+        .iter()
+        .filter(|f| f.geometry.is_none())
+        .count();
     assert!(
         null_geom_count >= 1,
         "should have at least one null geometry feature, found {null_geom_count}"

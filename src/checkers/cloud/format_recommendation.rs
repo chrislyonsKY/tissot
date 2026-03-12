@@ -45,9 +45,15 @@ impl Rule for FormatRecommendation {
         }
 
         let (format_name, suggestion) = if path.ends_with(".shp") {
-            ("Shapefile", "Convert to FlatGeobuf (streamable, spatially indexed) or GeoParquet (columnar, compressed). Shapefile has a 2GB limit and requires multiple sidecar files. See: https://guide.cloudnativegeo.org/")
+            (
+                "Shapefile",
+                "Convert to FlatGeobuf (streamable, spatially indexed) or GeoParquet (columnar, compressed). Shapefile has a 2GB limit and requires multiple sidecar files. See: https://guide.cloudnativegeo.org/",
+            )
         } else if path.ends_with(".gpkg") {
-            ("GeoPackage", "Convert to FlatGeobuf or GeoParquet for cloud-native access. GeoPackage (SQLite) requires full download for any read. See: https://guide.cloudnativegeo.org/geopackage/")
+            (
+                "GeoPackage",
+                "Convert to FlatGeobuf or GeoParquet for cloud-native access. GeoPackage (SQLite) requires full download for any read. See: https://guide.cloudnativegeo.org/geopackage/",
+            )
         } else if path.ends_with(".geojson") || path.ends_with(".json") {
             let file_size = std::fs::metadata(ctx.file_path)
                 .map(|m| m.len())
@@ -56,7 +62,10 @@ impl Rule for FormatRecommendation {
             if file_size < threshold {
                 return vec![];
             }
-            ("GeoJSON (large)", "Large GeoJSON files are slow to parse and not streamable. Convert to FlatGeobuf or GeoParquet. See: https://guide.cloudnativegeo.org/")
+            (
+                "GeoJSON (large)",
+                "Large GeoJSON files are slow to parse and not streamable. Convert to FlatGeobuf or GeoParquet. See: https://guide.cloudnativegeo.org/",
+            )
         } else {
             return vec![];
         };
@@ -64,9 +73,7 @@ impl Rule for FormatRecommendation {
         vec![Finding {
             rule_id: self.id().to_string(),
             severity: self.default_severity(),
-            message: format!(
-                "Dataset is in {format_name} format, which is not cloud-optimized"
-            ),
+            message: format!("Dataset is in {format_name} format, which is not cloud-optimized"),
             location: None,
             geometry: None,
             metric: None,

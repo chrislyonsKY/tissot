@@ -5,7 +5,7 @@
 //! unreadable on a map.
 
 use geo::{BoundingRect, Coord, Geometry};
-use rstar::{primitives::GeomWithData, RTree};
+use rstar::{RTree, primitives::GeomWithData};
 
 use crate::core::rule::{
     CheckContext, Domain, Feature, Finding, Rule, RuleEntry, Severity, SpatialLocation,
@@ -114,8 +114,14 @@ impl Rule for LabelDensity {
 
                 // Count neighbors within the search radius using the spatial index.
                 let envelope = rstar::AABB::from_corners(
-                    [coord.x - DEFAULT_SEARCH_RADIUS, coord.y - DEFAULT_SEARCH_RADIUS],
-                    [coord.x + DEFAULT_SEARCH_RADIUS, coord.y + DEFAULT_SEARCH_RADIUS],
+                    [
+                        coord.x - DEFAULT_SEARCH_RADIUS,
+                        coord.y - DEFAULT_SEARCH_RADIUS,
+                    ],
+                    [
+                        coord.x + DEFAULT_SEARCH_RADIUS,
+                        coord.y + DEFAULT_SEARCH_RADIUS,
+                    ],
                 );
 
                 let neighbors: Vec<&GeomWithData<[f64; 2], usize>> =

@@ -7,7 +7,9 @@
 
 use std::collections::{HashMap, HashSet};
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Minimum recommended categories for a meaningful thematic map.
 const MIN_CATEGORIES: usize = 3;
@@ -191,9 +193,7 @@ mod tests {
 
     #[test]
     fn flags_too_many_categories() {
-        let classes = vec![
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-        ];
+        let classes = vec!["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
         assert!(classes.len() > MAX_CATEGORIES);
 
         let features: Vec<Feature> = classes.into_iter().map(make_feature_with_class).collect();

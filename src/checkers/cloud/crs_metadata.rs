@@ -1,6 +1,8 @@
 //! Rule: Validate CRS metadata is present and embedded in the file.
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Checks that CRS metadata is properly embedded and readable.
 pub struct CrsMetadata;

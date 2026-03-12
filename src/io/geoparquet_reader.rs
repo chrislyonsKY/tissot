@@ -59,18 +59,17 @@ mod inner {
     pub fn read(path: &Path) -> Result<Vec<Layer>> {
         let file = std::fs::File::open(path)?;
 
-        let builder = ParquetRecordBatchReaderBuilder::try_new(file).map_err(|e| {
-            TissotError::GeoParquet(format!("Failed to open Parquet file: {e}"))
-        })?;
+        let builder = ParquetRecordBatchReaderBuilder::try_new(file)
+            .map_err(|e| TissotError::GeoParquet(format!("Failed to open Parquet file: {e}")))?;
 
         // Extract GeoParquet metadata from Parquet key-value metadata.
         let geo_meta = extract_geo_metadata(&builder)?;
         let geom_col = &geo_meta.primary_column;
         let crs = extract_crs(&geo_meta);
 
-        let reader = builder.build().map_err(|e| {
-            TissotError::GeoParquet(format!("Failed to build Parquet reader: {e}"))
-        })?;
+        let reader = builder
+            .build()
+            .map_err(|e| TissotError::GeoParquet(format!("Failed to build Parquet reader: {e}")))?;
 
         let schema = reader.schema();
 
@@ -80,9 +79,7 @@ mod inner {
             .iter()
             .position(|f| f.name() == geom_col)
             .ok_or_else(|| {
-                TissotError::GeoParquet(format!(
-                    "Geometry column '{geom_col}' not found in schema"
-                ))
+                TissotError::GeoParquet(format!("Geometry column '{geom_col}' not found in schema"))
             })?;
 
         let mut features = Vec::new();
@@ -166,9 +163,7 @@ mod inner {
             Some(crs_json) => {
                 // Try to extract EPSG code from PROJJSON id field.
                 if let Some(id) = crs_json.get("id") {
-                    if let (Some(authority), Some(code)) =
-                        (id.get("authority"), id.get("code"))
-                    {
+                    if let (Some(authority), Some(code)) = (id.get("authority"), id.get("code")) {
                         let auth = authority.as_str().unwrap_or("EPSG");
                         if let Some(code_num) = code.as_u64() {
                             return Some(format!("{auth}:{code_num}"));
@@ -187,10 +182,7 @@ mod inner {
     }
 
     /// Parse a geometry from a WKB byte array at the given row index.
-    fn parse_geometry_from_array(
-        array: &dyn Array,
-        row: usize,
-    ) -> Result<Option<Geometry>> {
+    fn parse_geometry_from_array(array: &dyn Array, row: usize) -> Result<Option<Geometry>> {
         if array.is_null(row) {
             return Ok(None);
         }
@@ -210,9 +202,7 @@ mod inner {
                     .as_any()
                     .downcast_ref::<LargeBinaryArray>()
                     .ok_or_else(|| {
-                        TissotError::GeoParquet(
-                            "Failed to cast to LargeBinaryArray".into(),
-                        )
+                        TissotError::GeoParquet("Failed to cast to LargeBinaryArray".into())
                     })?;
                 Some(bin_array.value(row))
             }
@@ -287,14 +277,16 @@ mod inner {
 
     /// Read a `f64` from `buf` at `offset` with the given endianness.
     fn read_f64(buf: &[u8], offset: usize, le: bool) -> Result<f64> {
-        let bytes: [u8; 8] = buf.get(offset..offset + 8).ok_or_else(|| {
-            TissotError::GeoParquet(format!(
-                "WKB truncated at offset {offset} (need 8 bytes, have {})",
-                buf.len()
-            ))
-        })?.try_into().map_err(|_| {
-            TissotError::GeoParquet("WKB slice conversion failed".into())
-        })?;
+        let bytes: [u8; 8] = buf
+            .get(offset..offset + 8)
+            .ok_or_else(|| {
+                TissotError::GeoParquet(format!(
+                    "WKB truncated at offset {offset} (need 8 bytes, have {})",
+                    buf.len()
+                ))
+            })?
+            .try_into()
+            .map_err(|_| TissotError::GeoParquet("WKB slice conversion failed".into()))?;
         Ok(if le {
             f64::from_le_bytes(bytes)
         } else {
@@ -304,14 +296,16 @@ mod inner {
 
     /// Read a `u32` from `buf` at `offset` with the given endianness.
     fn read_u32(buf: &[u8], offset: usize, le: bool) -> Result<u32> {
-        let bytes: [u8; 4] = buf.get(offset..offset + 4).ok_or_else(|| {
-            TissotError::GeoParquet(format!(
-                "WKB truncated at offset {offset} (need 4 bytes, have {})",
-                buf.len()
-            ))
-        })?.try_into().map_err(|_| {
-            TissotError::GeoParquet("WKB slice conversion failed".into())
-        })?;
+        let bytes: [u8; 4] = buf
+            .get(offset..offset + 4)
+            .ok_or_else(|| {
+                TissotError::GeoParquet(format!(
+                    "WKB truncated at offset {offset} (need 4 bytes, have {})",
+                    buf.len()
+                ))
+            })?
+            .try_into()
+            .map_err(|_| TissotError::GeoParquet("WKB slice conversion failed".into()))?;
         Ok(if le {
             u32::from_le_bytes(bytes)
         } else {
@@ -357,7 +351,12 @@ mod inner {
         Ok(Geometry::LineString(geo::LineString::new(coords)))
     }
 
-    fn parse_wkb_ring(wkb: &[u8], offset: usize, le: bool, cs: usize) -> Result<(geo::LineString, usize)> {
+    fn parse_wkb_ring(
+        wkb: &[u8],
+        offset: usize,
+        le: bool,
+        cs: usize,
+    ) -> Result<(geo::LineString, usize)> {
         let num_points = read_u32(wkb, offset, le)? as usize;
         let data_start = offset + 4;
         let mut coords = Vec::with_capacity(num_points);
@@ -456,10 +455,7 @@ mod inner {
     }
 
     /// Convert an Arrow column value at a given row to a JSON value for properties.
-    fn column_value_to_json(
-        array: &dyn Array,
-        row: usize,
-    ) -> Option<serde_json::Value> {
+    fn column_value_to_json(array: &dyn Array, row: usize) -> Option<serde_json::Value> {
         if array.is_null(row) {
             return None;
         }
@@ -469,16 +465,56 @@ mod inner {
                 let arr = array.as_any().downcast_ref::<StringArray>()?;
                 Some(serde_json::Value::String(arr.value(row).to_string()))
             }
-            DataType::Int8 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Int8Type>().value(row))),
-            DataType::Int16 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Int16Type>().value(row))),
-            DataType::Int32 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Int32Type>().value(row))),
-            DataType::Int64 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Int64Type>().value(row))),
-            DataType::UInt8 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::UInt8Type>().value(row))),
-            DataType::UInt16 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::UInt16Type>().value(row))),
-            DataType::UInt32 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::UInt32Type>().value(row))),
-            DataType::UInt64 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::UInt64Type>().value(row))),
-            DataType::Float32 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Float32Type>().value(row))),
-            DataType::Float64 => Some(serde_json::json!(array.as_primitive::<arrow::datatypes::Float64Type>().value(row))),
+            DataType::Int8 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Int8Type>()
+                    .value(row)
+            )),
+            DataType::Int16 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Int16Type>()
+                    .value(row)
+            )),
+            DataType::Int32 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Int32Type>()
+                    .value(row)
+            )),
+            DataType::Int64 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Int64Type>()
+                    .value(row)
+            )),
+            DataType::UInt8 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::UInt8Type>()
+                    .value(row)
+            )),
+            DataType::UInt16 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::UInt16Type>()
+                    .value(row)
+            )),
+            DataType::UInt32 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::UInt32Type>()
+                    .value(row)
+            )),
+            DataType::UInt64 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::UInt64Type>()
+                    .value(row)
+            )),
+            DataType::Float32 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Float32Type>()
+                    .value(row)
+            )),
+            DataType::Float64 => Some(serde_json::json!(
+                array
+                    .as_primitive::<arrow::datatypes::Float64Type>()
+                    .value(row)
+            )),
             DataType::Boolean => {
                 let arr = array.as_boolean();
                 Some(serde_json::Value::Bool(arr.value(row)))

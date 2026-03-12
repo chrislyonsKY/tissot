@@ -218,10 +218,7 @@ fn xray_generates_recommendations() {
             "recommendation should have a CRS identifier"
         );
         // Should have a human-readable name
-        assert!(
-            !rec.name.is_empty(),
-            "recommendation should have a name"
-        );
+        assert!(!rec.name.is_empty(), "recommendation should have a name");
         // Fitness score should be in [0, 1]
         assert!(
             rec.fitness >= 0.0 && rec.fitness <= 1.0,
@@ -286,7 +283,10 @@ fn xray_report_serializes_to_json() {
 
     // Should be valid JSON that can be parsed back
     let parsed: serde_json::Value = serde_json::from_str(&json).unwrap();
-    assert!(parsed.is_object(), "serialized report should be a JSON object");
+    assert!(
+        parsed.is_object(),
+        "serialized report should be a JSON object"
+    );
     assert!(
         parsed.get("source_crs").is_some(),
         "JSON should contain source_crs field"

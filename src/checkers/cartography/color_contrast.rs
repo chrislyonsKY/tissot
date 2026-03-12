@@ -6,7 +6,9 @@
 
 use std::collections::HashSet;
 
-use crate::core::rule::{CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation};
+use crate::core::rule::{
+    CheckContext, Domain, Finding, Rule, RuleEntry, Severity, SpatialLocation,
+};
 
 /// Maximum number of unique categorical values before color distinction
 /// becomes difficult for human perception.
@@ -141,9 +143,19 @@ mod tests {
     #[test]
     fn flags_too_many_categories() {
         let categories: Vec<&str> = vec![
-            "residential", "commercial", "industrial", "agricultural",
-            "forest", "water", "wetland", "barren", "grassland",
-            "shrubland", "snow_ice", "developed_low", "developed_high",
+            "residential",
+            "commercial",
+            "industrial",
+            "agricultural",
+            "forest",
+            "water",
+            "wetland",
+            "barren",
+            "grassland",
+            "shrubland",
+            "snow_ice",
+            "developed_low",
+            "developed_high",
         ];
         assert!(categories.len() > DEFAULT_MAX_CATEGORIES);
 

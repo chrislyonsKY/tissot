@@ -67,11 +67,7 @@ fn parcels_score_lower_than_simple_points() {
 fn score_report_has_all_categories() {
     let report = score_file("simple_points.geojson");
 
-    assert_eq!(
-        report.categories.len(),
-        5,
-        "should have 5 score categories"
-    );
+    assert_eq!(report.categories.len(), 5, "should have 5 score categories");
 
     let category_names: Vec<String> = report
         .categories

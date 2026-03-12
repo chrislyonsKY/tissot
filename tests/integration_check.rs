@@ -1,9 +1,9 @@
 //! Integration tests for the checker engine.
 
 use std::path::PathBuf;
+use tissot::checkers::run_checks;
 use tissot::core::config::Config;
 use tissot::core::rule::{Domain, Severity};
-use tissot::checkers::run_checks;
 use tissot::io;
 
 /// Helper: resolve path to an example dataset file.

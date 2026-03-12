@@ -71,7 +71,8 @@ impl Rule for FileSize {
                 geometry: None,
                 metric: Some(file_size as f64),
                 suggestion: Some(
-                    "Consider spatial partitioning or use a multi-file GeoParquet dataset".to_string(),
+                    "Consider spatial partitioning or use a multi-file GeoParquet dataset"
+                        .to_string(),
                 ),
                 fixable: false,
             }];
