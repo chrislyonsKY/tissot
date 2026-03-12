@@ -14,3 +14,6 @@ pub mod report;
 pub mod score;
 pub mod watch;
 pub mod xray;
+
+#[cfg(feature = "python")]
+mod python;

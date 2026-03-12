@@ -166,7 +166,7 @@ Rust core using the [GeoRust](https://georust.org/) ecosystem. Python bindings v
 
 ## License
 
-Dual-licensed under [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
+[Apache-2.0](LICENSE-APACHE)
 
 ## Contributing
 

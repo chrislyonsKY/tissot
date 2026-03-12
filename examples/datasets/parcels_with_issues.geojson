@@ -1,0 +1,87 @@
+{
+  "type": "FeatureCollection",
+  "name": "parcels_with_issues",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P001", "owner": "Smith", "acres": 2.5, "zoning": "R1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.5, 38.0], [-84.49, 38.0], [-84.49, 38.01], [-84.5, 38.01], [-84.5, 38.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P002", "owner": "Johnson", "acres": 1.8, "zoning": "R1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.49, 38.0], [-84.48, 38.0], [-84.48, 38.01], [-84.49, 38.01], [-84.49, 38.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P003", "owner": "Williams", "acres": 3.1, "zoning": "C1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.48, 38.0], [-84.47, 38.0], [-84.47, 38.01], [-84.48, 38.01], [-84.48, 38.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P004", "owner": "Brown", "acres": null, "zoning": "R1"},
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P005", "owner": "Davis", "acres": 2.0, "zoning": "R2"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.5, 38.01], [-84.49, 38.01], [-84.49, 38.02], [-84.5, 38.02], [-84.5, 38.01]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P006", "owner": "Miller", "acres": 1.5, "zoning": "R1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.49, 38.01], [-84.48, 38.01], [-84.48, 38.02], [-84.49, 38.02], [-84.49, 38.01]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P007", "owner": "Wilson", "acres": 2.2, "zoning": "C1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.48, 38.01], [-84.47, 38.01], [-84.47, 38.02], [-84.48, 38.02], [-84.48, 38.01]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P001", "owner": "Smith", "acres": 2.5, "zoning": "R1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.5, 38.0], [-84.49, 38.0], [-84.49, 38.01], [-84.5, 38.01], [-84.5, 38.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P008", "owner": "Taylor", "acres": 5.0, "zoning": "A1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-84.5, 38.02], [-84.47, 38.02], [-84.48, 38.025],
+          [-84.485, 38.021], [-84.475, 38.023], [-84.49, 38.03],
+          [-84.5, 38.03], [-84.5, 38.02]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"parcel_id": "P009", "owner": "Anderson", "acres": 0.8, "zoning": "R1"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-84.495, 38.005], [-84.485, 38.005], [-84.485, 38.015], [-84.495, 38.015], [-84.495, 38.005]]]
+      }
+    }
+  ]
+}

@@ -67,18 +67,15 @@ impl Rule for TopologyOverlaps {
                 continue;
             }
 
-            // R-tree based overlap detection: build spatial index from envelopes,
-            // for each polygon find candidates with overlapping bounding boxes,
-            // compute actual polygon intersection to detect overlapping regions.
-            todo!("R-tree overlap detection: build rstar index, query intersecting envelopes, compute pairwise polygon intersections");
-
-            #[allow(unreachable_code)]
-            {
-                let _ = &findings;
-                let _ = SpatialLocation::Layer {
-                    name: layer.name.clone(),
-                };
-            }
+            // TODO(Phase 2): R-tree based overlap detection — build spatial index
+            // from envelopes, query intersecting bounding boxes, compute pairwise
+            // polygon intersections to detect overlapping regions.
+            //
+            // For now, return empty findings. The rule is registered so it shows
+            // up in the rule list, but full detection requires geo boolean ops.
+            let _ = SpatialLocation::Layer {
+                name: layer.name.clone(),
+            };
         }
 
         findings

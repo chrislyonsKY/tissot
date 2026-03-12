@@ -4,6 +4,7 @@
 pub mod flatgeobuf_reader;
 pub mod geojson_reader;
 pub mod geopackage_reader;
+pub mod geoparquet_reader;
 pub mod shapefile_reader;
 
 use crate::core::error::{Result, TissotError};
@@ -21,6 +22,8 @@ pub enum Format {
     FlatGeobuf,
     /// GeoPackage (.gpkg)
     GeoPackage,
+    /// GeoParquet (.parquet)
+    GeoParquet,
 }
 
 /// Detect file format from extension.
@@ -36,6 +39,7 @@ pub fn detect_format(path: &Path) -> Result<Format> {
         "shp" => Ok(Format::Shapefile),
         "fgb" => Ok(Format::FlatGeobuf),
         "gpkg" => Ok(Format::GeoPackage),
+        "parquet" | "geoparquet" => Ok(Format::GeoParquet),
         _ => Err(TissotError::UnsupportedFormat(format!(
             "Unknown file extension: .{ext}"
         ))),
@@ -50,6 +54,7 @@ pub fn read_file(path: &Path) -> Result<Vec<Layer>> {
         Format::Shapefile => shapefile_reader::read(path),
         Format::FlatGeobuf => flatgeobuf_reader::read(path),
         Format::GeoPackage => geopackage_reader::read(path),
+        Format::GeoParquet => geoparquet_reader::read(path),
     }
 }
 
@@ -86,6 +91,18 @@ mod tests {
     fn detect_geopackage() {
         let path = PathBuf::from("data.gpkg");
         assert_eq!(detect_format(&path).unwrap(), Format::GeoPackage);
+    }
+
+    #[test]
+    fn detect_parquet() {
+        let path = PathBuf::from("data.parquet");
+        assert_eq!(detect_format(&path).unwrap(), Format::GeoParquet);
+    }
+
+    #[test]
+    fn detect_geoparquet_extension() {
+        let path = PathBuf::from("data.geoparquet");
+        assert_eq!(detect_format(&path).unwrap(), Format::GeoParquet);
     }
 
     #[test]

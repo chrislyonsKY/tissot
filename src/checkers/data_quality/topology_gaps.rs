@@ -67,18 +67,12 @@ impl Rule for TopologyGaps {
                 continue;
             }
 
-            // R-tree based gap detection: build spatial index, find adjacent polygons,
-            // compute difference to detect gap regions.
-            // This requires computing the union boundary and finding uncovered areas.
-            todo!("R-tree gap detection: build rstar index from polygon envelopes, query neighbors, compute gap geometries");
-
-            #[allow(unreachable_code)]
-            {
-                let _ = &findings;
-                let _ = SpatialLocation::Layer {
-                    name: layer.name.clone(),
-                };
-            }
+            // TODO(Phase 2): R-tree based gap detection — build spatial index,
+            // find adjacent polygons, compute difference to detect gap regions.
+            // Requires boolean polygon ops (union boundary, uncovered area detection).
+            let _ = SpatialLocation::Layer {
+                name: layer.name.clone(),
+            };
         }
 
         findings

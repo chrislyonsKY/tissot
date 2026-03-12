@@ -1,17 +1,20 @@
 [package]
 name = "tissot"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.85"
 description = "Visual-first geospatial diagnostics engine: projection x-ray, cartographic linting, spatial diffing, and autofix"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/chrislyons/tissot"
+repository = "https://github.com/chrislyonsKY/tissot"
+homepage = "https://chrislyonsky.github.io/tissot/"
+documentation = "https://chrislyonsky.github.io/tissot/"
 keywords = ["geospatial", "projection", "cartography", "gis", "diagnostics"]
 categories = ["science::geo", "command-line-utilities"]
 
 [lib]
 name = "tissot"
 path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "tissot"
@@ -49,6 +52,13 @@ geojson = "0.24"
 shapefile = "0.6"
 flatgeobuf = "4"
 
+# Python bindings (optional — behind feature flag)
+pyo3 = { version = "0.23", features = ["extension-module"], optional = true }
+
+# GeoParquet (optional — behind feature flag)
+parquet = { version = "54", optional = true }
+arrow = { version = "54", features = ["prettyprint"], optional = true }
+
 # Watch mode
 notify = "7"
 
@@ -62,7 +72,9 @@ tempfile = "3"
 [features]
 default = []
 gdal = []
-full = ["gdal"]
+python = ["dep:pyo3"]
+geoparquet = ["dep:parquet", "dep:arrow"]
+full = ["gdal", "geoparquet"]
 
 [profile.release]
 lto = true

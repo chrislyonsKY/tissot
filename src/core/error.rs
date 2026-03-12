@@ -32,6 +32,10 @@ pub enum TissotError {
     #[error("Config error: {0}")]
     Config(String),
 
+    /// GeoParquet parsing error.
+    #[error("GeoParquet error: {0}")]
+    GeoParquet(String),
+
     /// Generic internal error.
     #[error("{0}")]
     Internal(String),

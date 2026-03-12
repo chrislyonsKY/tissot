@@ -1,0 +1,116 @@
+{
+  "type": "FeatureCollection",
+  "name": "us_states_sample",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::3857"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kentucky",
+        "fips": "21",
+        "area_sq_mi": 40408,
+        "population": 4505836
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-9945810, 4439106],
+          [-9390337, 4439106],
+          [-9390337, 4721671],
+          [-9564005, 4721671],
+          [-9600000, 4650000],
+          [-9750000, 4600000],
+          [-9945810, 4550000],
+          [-9945810, 4439106]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tennessee",
+        "fips": "47",
+        "area_sq_mi": 42144,
+        "population": 6910840
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-9945810, 4226661],
+          [-9282600, 4226661],
+          [-9282600, 4439106],
+          [-9390337, 4439106],
+          [-9945810, 4439106],
+          [-9945810, 4226661]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Virginia",
+        "fips": "51",
+        "area_sq_mi": 42775,
+        "population": 8631393
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-9282600, 4439106],
+          [-8530000, 4439106],
+          [-8530000, 4721671],
+          [-8766409, 4721671],
+          [-9100000, 4600000],
+          [-9282600, 4500000],
+          [-9282600, 4439106]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Carolina",
+        "fips": "37",
+        "area_sq_mi": 53819,
+        "population": 10439388
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-9282600, 4163881],
+          [-8460000, 4163881],
+          [-8460000, 4439106],
+          [-8530000, 4439106],
+          [-9282600, 4439106],
+          [-9282600, 4163881]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Virginia",
+        "fips": "54",
+        "area_sq_mi": 24230,
+        "population": 1793716
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-9282600, 4530000],
+          [-8950000, 4530000],
+          [-8900000, 4721671],
+          [-9100000, 4850000],
+          [-9282600, 4800000],
+          [-9390337, 4721671],
+          [-9282600, 4530000]
+        ]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "type": "FeatureCollection",
+  "name": "kentucky_roads",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"name": "I-64", "type": "Interstate", "lanes": 4, "speed_mph": 70},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-89.0, 37.1], [-88.5, 37.2], [-88.0, 37.5], [-87.5, 37.8],
+          [-87.0, 38.0], [-86.5, 38.1], [-86.0, 38.2], [-85.7, 38.25],
+          [-85.5, 38.22], [-85.2, 38.2], [-84.8, 38.1], [-84.5, 38.05]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "I-65", "type": "Interstate", "lanes": 6, "speed_mph": 70},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-85.76, 36.6], [-85.75, 37.0], [-85.74, 37.3], [-85.73, 37.6],
+          [-85.76, 37.8], [-85.76, 38.1], [-85.76, 38.25]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "I-75", "type": "Interstate", "lanes": 4, "speed_mph": 70},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-84.26, 36.6], [-84.3, 37.0], [-84.35, 37.3], [-84.4, 37.5],
+          [-84.45, 37.8], [-84.5, 38.0], [-84.5, 38.2], [-84.51, 38.5],
+          [-84.52, 38.8], [-84.53, 39.05]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "US-60", "type": "US Highway", "lanes": 2, "speed_mph": 55},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-89.0, 37.0], [-88.0, 37.1], [-87.0, 37.3], [-86.5, 37.5],
+          [-86.0, 37.7], [-85.5, 37.9], [-85.0, 38.0], [-84.5, 38.05]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"name": "Mountain Parkway", "type": "State Highway", "lanes": 4, "speed_mph": 65},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-84.5, 38.05], [-84.0, 37.9], [-83.7, 37.8], [-83.4, 37.75],
+          [-83.1, 37.7], [-82.8, 37.7]
+        ]
+      }
+    }
+  ]
+}

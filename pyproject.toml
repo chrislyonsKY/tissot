@@ -4,18 +4,40 @@ build-backend = "maturin"
 
 [project]
 name = "tissot"
-version = "0.1.0"
-description = "Visual-first geospatial diagnostics engine"
+version = "0.2.0"
+description = "Visual-first geospatial diagnostics engine: projection x-ray, cartographic linting, spatial diffing, and autofix"
+readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT OR Apache-2.0" }
-keywords = ["geospatial", "projection", "cartography", "gis", "diagnostics"]
+authors = [
+    { name = "Chris Lyons" },
+]
+keywords = ["geospatial", "projection", "cartography", "gis", "diagnostics", "cloud-native", "linting"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering :: GIS",
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
 ]
+
+[project.urls]
+Homepage = "https://chrislyonsky.github.io/tissot/"
+Documentation = "https://chrislyonsky.github.io/tissot/"
+Repository = "https://github.com/chrislyonsKY/tissot"
+Issues = "https://github.com/chrislyonsKY/tissot/issues"
+Changelog = "https://github.com/chrislyonsKY/tissot/blob/main/CHANGELOG.md"
 
 [tool.maturin]
 module-name = "tissot._tissot"
+features = ["python"]

@@ -1,0 +1,82 @@
+site_name: Tissot
+site_url: https://chrislyonsky.github.io/tissot/
+site_description: Visual-first geospatial diagnostics engine — projection x-ray, cartographic linting, spatial diffing, and autofix
+site_author: Chris Lyons
+repo_url: https://github.com/chrislyonsKY/tissot
+repo_name: chrislyonsKY/tissot
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: light green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/images/favicon.png
+  logo: assets/images/icon.svg
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/chrislyonsKY/tissot
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/tissot/
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - CLI Reference: cli.md
+  - Tutorials:
+    - Projection X-Ray: tutorials/projection-xray.md
+    - Data Quality Audit: tutorials/data-quality-audit.md
+    - Autofix Pipeline: tutorials/autofix-pipeline.md
+    - Map Score for CI/CD: tutorials/map-score-cicd.md
+    - Cloud-Native Validation: tutorials/cloud-native-validation.md
+  - Architecture: architecture.md
+  - API Reference: api/reference.md
+  - Release Notes: release-notes.md
