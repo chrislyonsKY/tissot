@@ -64,6 +64,7 @@ pub async fn serve_report(kind: ReportKind) -> Result<()> {
 
     // Bind to a random available port.
     let listener = TcpListener::bind("127.0.0.1:0")?;
+    listener.set_nonblocking(true)?;
     let port = listener.local_addr()?.port();
     let url = format!("http://127.0.0.1:{port}");
 
